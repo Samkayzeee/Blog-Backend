@@ -2,6 +2,7 @@ const {Router}  = require('express');
 const User = require('../models/User');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -30,7 +31,7 @@ router.post('/signup',urlencodedParser, async (req, res) => {
         res.send(user);
         res.json({message: "Signup Successful"});
     } catch (error) {
-        res.status(500).json({message:"theirs is a problem somewhere"});
+        res.status(500).json({message:"User not created"});
         console.log(error);
     }
        
@@ -40,16 +41,24 @@ router.post('/login',urlencodedParser, async(req, res) =>{
     const {email, password} = req.body;
     const user =  await User.findOne({ email:email });
 
-    if (user) {
-        const valid_password = await bcrypt.compare(password, user.password);
-        if (valid_password) {
-            res.status(200).json({ message: "Login Successful" });
-        } else{
-            res.status(400).json({ error: "Invalid Password" });
-        } 
-    } else{
-        res.status(401).json({ error: "User does not exist" });
-    }
+    console.log(user);
+    // res.send(user);
+
+    // if (user) {
+    //     const valid_password = await bcrypt.compare(password, user.password);
+    //     if (valid_password) {
+    //         res.status(200).json({ message: "Login Successful" });
+    //     } else{
+    //         res.status(400).json({ error: "Invalid Password" });
+    //     } 
+    // } else{
+    //     res.status(401).json({ error: "User does not exist" });
+    // }
+   
+
+const  username = user.username
+const accessToken = jwt.sign(username, process.env.SECRET_KEY);
+res.send({accessToken:accessToken});
 });
 
 module.exports = router;

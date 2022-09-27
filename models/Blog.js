@@ -5,10 +5,6 @@ const blogSchema = new Schema({
         type:Schema.Types.String,
         required:true
     },
-    // snippet:{
-    //     type:Schema.Types.String,
-    //     required:true
-    // },
     body:{
         type:Schema.Types.String,
         required:true
