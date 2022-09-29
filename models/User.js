@@ -1,5 +1,6 @@
 const {Schema, model} = require("mongoose");
-
+const bcrypt = require('bcrypt');
+const { isEmail } = require('validator')
 
 const userSchema = new Schema ({
     fullname:{
@@ -14,7 +15,8 @@ const userSchema = new Schema ({
     email:{
         type:Schema.Types.String,
         required:[true, 'Please input your email'],
-        unique:true
+        unique:true,
+        validate: [isEmail, 'Please enter a valid email']
     },
     password:{
         type:Schema.Types.String,
@@ -25,6 +27,12 @@ const userSchema = new Schema ({
     timestamps:true
 }
 );
+userSchema.pre('save', async function(next){
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(this.password, salt)
+    this.password = hashedPassword
+    next();
+})
 
 
 const User = model("users", userSchema);

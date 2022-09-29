@@ -4,6 +4,7 @@ const router = Router();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const fs = require('fs');
+const  {IncomingForm} = require('formidable');
 const urlencodedParser = bodyParser.urlencoded({ extended:false });
 
 
@@ -31,7 +32,7 @@ router.post('/create', urlencodedParser, upload.single('image'), async(req, res)
             body:body.fullreview,
             category:body.category,
             image: {
-                data: fs.readFileSync("uploads" + req.file.filename),
+                data: fs.readFileSync("uploads/" + req.file.filename),
                 contentType: "image/png"
             }
         })
