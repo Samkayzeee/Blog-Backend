@@ -1,7 +1,6 @@
 const {Router}  = require('express');
 const User = require('../models/User');
 const bodyParser = require('body-parser');
-// const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authControl = require('../controller/Authcontroller')
 
@@ -51,7 +50,7 @@ try {
 
     const jwtData = {_id:user._id, email: user.email}
     const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn:"3h"})
-    res.status(200).send(token)
+    res.status(200).send({token:token})
 } catch (error) {
     res.status(401).send()
 }
