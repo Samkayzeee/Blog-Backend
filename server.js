@@ -23,7 +23,7 @@ mongoose.connect(MONGOURI, {}, (err) => {
 });
 
 app.get('/', (req, res) => {
-    res.send("This is the main page");
+    res.send("Nothing in the main route");
 });
 
 app.use('/', userRoute);
