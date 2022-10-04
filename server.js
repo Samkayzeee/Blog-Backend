@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(cookieParser());
 const userRoute = require('./router/user');
 const blogRoutes = require('./router/blog_create');
+const profileRoute = require('./router/profile');
 
 
 
@@ -28,3 +29,4 @@ app.get('/', (req, res) => {
 
 app.use('/', userRoute);
 app.use('/', blogRoutes);
+app.use('/', profileRoute);

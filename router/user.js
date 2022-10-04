@@ -47,12 +47,11 @@ router.post('/login',urlencodedParser, async(req, res) =>{
     const {email, password} = req.body;
 try {
     const user = await User.login(email, password);
-
     const jwtData = {_id:user._id, email: user.email}
     const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn:"3h"})
     res.status(200).send({token:token})
 } catch (error) {
-    res.status(401).send()
+    res.status(401).send('User not found')
 }
    
 });
