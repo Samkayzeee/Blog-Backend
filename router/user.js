@@ -33,8 +33,8 @@ router.post('/signup',urlencodedParser, async (req, res) => {
             password:body.password
         });
         const jwtData = {_id:user._id, fullname: user.fullname}
-        const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn: "3h"});
-        res.status(200).send({message: "Signup Successful",token:token});
+        const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn: "4h"});
+        res.status(200).send({message: "Signup Successful", token:token, fullname:user.fullname, username:user.username});
 
     } catch (error) {
             res.status(400).send({message:"User not created"});
@@ -48,10 +48,16 @@ router.post('/login',urlencodedParser, async(req, res) =>{
 try {
     const user = await User.login(email, password);
     const jwtData = {_id:user._id, email: user.email}
-    const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn:"3h"})
-    res.status(200).send({token:token})
+    const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn:"4h"})
+    res.status(200).send({ message:"Login Successful", token:token, fullname:user.fullname, username:user.username})
 } catch (error) {
-    res.status(401).send('User not found')
+    if (!(email ) || !(password)) {
+        res.status(401).send({ messsage:"Both Email and Password are required correctly" });
+    }
+    else{
+        res.status(401).send({ message:"User Not Found" });
+    }
+    console.log(error);
 }
    
 });
