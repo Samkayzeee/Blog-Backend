@@ -1,14 +1,15 @@
-const {Router}  = require('express');
-const Blog = require('../models/Blog');
+import { Router } from 'express';
+import Blog from '../models/Blog.js';
 const router = Router();
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const fs = require('fs');
-const urlencodedParser = bodyParser.urlencoded({ extended:false });
+import pkg from 'body-parser';
+const { urlencoded } = pkg;
+import multer, { diskStorage } from 'multer';
+import { readFileSync } from 'fs';
+const urlencodedParser = urlencoded({ extended:false });
 
 
 
-const storage = multer.diskStorage({
+const storage = diskStorage({
     destination:(req, file, cb) => {
         cb(null, "uploads")
     },
@@ -30,7 +31,7 @@ router.post('/create', urlencodedParser, upload.single('image'), async(req, res)
             body:body.fullreview,
             category:body.category,
             image: {
-                data: fs.readFileSync("uploads/"+ req.file.filename),
+                data: readFileSync("uploads/"+ req.file.filename),
                 contentType: "image/png"
             }
         })
@@ -59,4 +60,4 @@ router.delete('/delete', urlencodedParser, async(req, res) =>{
     }
 });
 
-module.exports = router;
+export default router;

@@ -1,14 +1,15 @@
-const {Router}  = require('express');
-const User = require('../models/User');
-const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
-const authControl = require('../controller/Authcontroller')
+import { Router } from 'express';
+import User from '../models/User.js';
+import bodyParser from 'body-parser';
+import pkg from 'jsonwebtoken';
+const { sign } = pkg;
+import authControl from '../controller/Authcontroller.js';
 
 
 
 const router = Router();
 
-const urlencodedParser = bodyParser.urlencoded({ extended:false });
+const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 
 
@@ -33,7 +34,7 @@ router.post('/signup',urlencodedParser, async (req, res) => {
             password:body.password
         });
         const jwtData = {_id:user._id, fullname: user.fullname}
-        const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn: "4h"});
+        const token = sign(jwtData, process.env.SECRET_KEY, {expiresIn: "4h"});
         res.status(200).send({message: "Signup Successful", token:token, fullname:user.fullname, username:user.username});
 
     } catch (error) {
@@ -48,7 +49,7 @@ router.post('/login',urlencodedParser, async(req, res) =>{
 try {
     const user = await User.login(email, password);
     const jwtData = {_id:user._id, email: user.email}
-    const token = jwt.sign(jwtData, process.env.SECRET_KEY, {expiresIn:"4h"})
+    const token = sign(jwtData, process.env.SECRET_KEY, {expiresIn:"4h"})
     res.status(200).send({ message:"Login Successful", token:token, fullname:user.fullname, username:user.username})
 } catch (error) {
     if (!(email ) || !(password)) {
@@ -62,4 +63,4 @@ try {
    
 });
 
-module.exports = router;
+export default router;

@@ -1,6 +1,7 @@
-const {Schema, model} = require("mongoose");
-const bcrypt = require('bcrypt');
-const { isEmail } = require('validator')
+import { Schema, model } from "mongoose";
+import { genSalt, hash, compare } from 'bcrypt';
+import pkg from 'validator';
+const { isEmail } = pkg;
 
 const userSchema = new Schema ({
     fullname:{
@@ -28,8 +29,8 @@ const userSchema = new Schema ({
 }
 );
 userSchema.pre('save', async function(next){
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(this.password, salt)
+    const salt = await genSalt();
+    const hashedPassword = await hash(this.password, salt)
     this.password = hashedPassword
     next();
 })
@@ -37,7 +38,7 @@ userSchema.pre('save', async function(next){
 userSchema.statics.login = async function(email, password){
     const user = await this.findOne({ email });
     if(user){
-        const auth = await bcrypt.compare(password, user.password);
+        const auth = await compare(password, user.password);
         if(auth) {
             return user;
         }
@@ -50,4 +51,4 @@ userSchema.statics.login = async function(email, password){
 const User = model("users", userSchema);
 
 
-module.exports = User;
+export default User;

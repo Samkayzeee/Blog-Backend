@@ -1,8 +1,9 @@
-const {Router}  = require('express');
-const User = require('../models/User');
+import { Router } from 'express';
+import User from '../models/User.js';
 const router = Router();
-const bodyParser = require('body-parser');
-const urlencodedParser = bodyParser.urlencoded({ extended:false });
+import pkg from 'body-parser';
+const { urlencoded } = pkg;
+const urlencodedParser = urlencoded({ extended:false });
 
 
 router.post('/update', urlencodedParser, async (req, res) => {
@@ -26,4 +27,4 @@ router.post('/update', urlencodedParser, async (req, res) => {
 
 })
 
-module.exports = router;
+export default router;

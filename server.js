@@ -1,23 +1,23 @@
-const express = require('express');
-const cors = require('cors');
+import express, { json } from 'express';
+import cors from 'cors';
 const app = express();
-const dotenv = require('dotenv');
-dotenv.config();
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
+import { config } from 'dotenv';
+config();
+import { connect } from 'mongoose';
+import cookieParser from 'cookie-parser';
 app.use(cors());
-app.use(express.json());
+app.use(json());
 app.use(cookieParser());
-const userRoute = require('./router/user');
-const blogRoutes = require('./router/blog_create');
-const profileRoute = require('./router/profile');
+import userRoute from './router/user.js';
+import blogRoutes from './router/blog_create.js';
+import profileRoute from './router/profile.js';
 
 
 
 const PORT = process.env.PORT;
 const MONGOURI = process.env.MONGOURI;
 
-mongoose.connect(MONGOURI, {}, (err) => {
+connect(MONGOURI, {}, (err) => {
     app.listen(PORT, () => console.log(`app running on port ${PORT}`));
     if(err) throw new Error(err)
     console.log ("database connected");
